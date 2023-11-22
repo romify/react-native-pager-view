@@ -1,9 +1,12 @@
 # react-native-pager-view <img src="img/viewpager-logo.png" alt="ViewPager" width="24" height="24">
 
-[![CircleCI branch](https://img.shields.io/circleci/build/github/callstack/react-native-pager-view/master.svg)](https://circleci.com/gh/callstack/react-native-pager-view/tree/master)
 [![npm package](https://badge.fury.io/js/react-native-pager-view.svg)](https://badge.fury.io/js/react-native-pager-view)
 [![Lean Core Extracted](https://img.shields.io/badge/Lean%20Core-Extracted-brightgreen.svg)](https://github.com/facebook/react-native/issues/23313)
 [![License](https://img.shields.io/github/license/callstack/react-native-pager-view?color=blue)](https://github.com/callstack/react-native-pager-view/blob/master/LICENSE)
+
+[![Lint](https://github.com/callstack/react-native-pager-view/actions/workflows/main.yml/badge.svg)](https://github.com/callstack/react-native-pager-view/actions/workflows/main.yml)
+[![iOS Build](https://github.com/callstack/react-native-pager-view/actions/workflows/ios.yml/badge.svg)](https://github.com/callstack/react-native-pager-view/actions/workflows/ios.yml)
+[![Android Build](https://github.com/callstack/react-native-pager-view/actions/workflows/android.yml/badge.svg)](https://github.com/callstack/react-native-pager-view/actions/workflows/android.yml)
 
 This component allows the user to swipe left and right through pages of data. Under the hood it is using the native [Android ViewPager](https://developer.android.com/reference/android/support/v4/view/ViewPager) and the [iOS UIPageViewController](https://developer.apple.com/documentation/uikit/uipageviewcontroller) implementations. [See it in action!](https://github.com/callstack/react-native-pager-view#preview)
 
@@ -16,29 +19,16 @@ This component allows the user to swipe left and right through pages of data. Un
 
 ## Versions
 
-| 4.x        | 5.x         |
-| ---------- | ----------- |
-| iOS        | iOS support |
-| ViewPager1 | ViewPager2  |
-
-## New architecture support (Fabric)
-
-This library supports both architectures (Paper and Fabric). If you would like enable new architecture, please run below command:
-
-`yarn add react-native-pager-view@newarch`
-
+| 4.x        | 5.x and above |
+| ---------- | ------------- |
+| iOS        | iOS support   |
+| ViewPager1 | ViewPager2    |
 
 ## Migration
 
 In version **6.x** support for `transitionStyle` property has been dropped. More information [here](https://github.com/callstack/react-native-pager-view/blob/master/MIGRATION.md).
 
 `"@react-native-community/viewpager"` library has been changed to `react-native-pager-view`. Here you can find more information, how to migrate pager view to the latest [version](https://github.com/callstack/react-native-pager-view/blob/master/MIGRATION.md)
-
-## Next version
-
-Lazy page loading has been added to the `next` version. If you would like to test lazy apporach in your app, you can try next version using below command:
-
-`yarn add react-native-pager-view@next`
 
 ## Getting started
 
@@ -157,11 +147,10 @@ For advanced usage please take a look into our [example project](https://github.
 | `pageMargin: number`                                                 |                                                                                                                Blank space to be shown between pages                                                                                                                |   both   |
 | `keyboardDismissMode: ('none' / 'on-drag')`                          |                                                                                                Determines whether the keyboard gets dismissed in response to a drag                                                                                                 |   both   |
 | `orientation: Orientation`                                           |                                                                                       Set `horizontal` or `vertical` scrolling orientation (it does **not** work dynamically)                                                                                       |   both   |
-| `showPageIndicator: boolean`                                         |                                                                                                         Shows the dots indicator at the bottom of the view                                                                                                          |   iOS    |
-| `overScrollMode: OverScollMode`                                      |                                                                              Used to override default value of overScroll mode. Can be `auto`, `always` or `never`. Defaults to `auto`                                                                              | Android  |
+| `overScrollMode: OverScrollMode`                                      |                                                                              Used to override default value of overScroll mode. Can be `auto`, `always` or `never`. Defaults to `auto`                                                                              | Android  |
 | `offscreenPageLimit: number`                                         | Set the number of pages that should be retained to either side of the currently visible page(s). Pages beyond this limit will be recreated from the adapter when needed. Defaults to RecyclerView's caching strategy. The given value must either be larger than 0. | Android  |
-| `overdrag: boolean`                                                  |                                                                                       Allows for overscrolling after reaching the end or very beginning or pages. Defaults to `false`                                                                               |   iOS    |
-| `layoutDirection: ('ltr' / 'rtl' / 'locale')`                        |                                                                                       Specifies layout direction. Use `ltr` or `rtl` to set explicitly or `locale` to deduce from the default language script of a locale. Defaults to `locale`                     |   both    |
+| `overdrag: boolean`                                                  |                                                                                   Allows for overscrolling after reaching the end or very beginning or pages. Defaults to `false`                                                                                   |   iOS    |
+| `layoutDirection: ('ltr' / 'rtl' / 'locale')`                        |                                                      Specifies layout direction. Use `ltr` or `rtl` to set explicitly or `locale` to deduce from the default language script of a locale. Defaults to `locale`                                                      |   both   |
 
 | Method                                     |                                                                                                         Description                                                                                                          | Platform |
 | ------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: |
@@ -193,7 +182,7 @@ requestAnimationFrame(() => refPagerView.current?.setPage(index));
 
 ### iOS
 
-|                            horizontal                                |                              vertical                                  |
+|                              horizontal                              |                                vertical                                |
 | :------------------------------------------------------------------: | :--------------------------------------------------------------------: |
 | <img src="img/ios-viewpager-scroll.gif" alt="ViewPager" width="325"> | <img src="img/ios-viewpager-vertical.gif" alt="ViewPager" width="325"> |
 
@@ -208,37 +197,38 @@ To attach reanimated handler with `onPageScroll` follow the below steps.
 ```jsx
 // 1. Define the handler
 function usePageScrollHandler(handlers, dependencies) {
-  const {context, doDependenciesDiffer} = useHandler(handlers, dependencies);
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
   const subscribeForEvents = ['onPageScroll'];
 
   return useEvent(
-    event => {
+    (event) => {
       'worklet';
-      const {onPageScroll} = handlers;
+      const { onPageScroll } = handlers;
       if (onPageScroll && event.eventName.endsWith('onPageScroll')) {
         onPageScroll(event, context);
       }
     },
     subscribeForEvents,
-    doDependenciesDiffer,
+    doDependenciesDiffer
   );
 }
-  
+
 // 2. Attach the event handler
-import PagerView from "react-native-pager-view";
-import Animated from "react-native-reanimated";
+import PagerView from 'react-native-pager-view';
+import Animated from 'react-native-reanimated';
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 const pageScrollHandler = usePageScrollHandler({
-    onPageScroll: e => {
-      'worklet';
-      offset.value = e.offset;
-      console.log(e.offset, e.position);
-    },
+  onPageScroll: (e) => {
+    'worklet';
+    offset.value = e.offset;
+    console.log(e.offset, e.position);
+  },
 });
 
-<AnimatedPagerView onPageScroll={pageScrollHandler}/>
+<AnimatedPagerView onPageScroll={pageScrollHandler} />;
 ```
+
 ## License
 
 MIT

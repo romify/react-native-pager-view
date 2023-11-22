@@ -10,7 +10,6 @@ export function ControlsPanel({
   pages,
   scrollState,
   scrollEnabled,
-  dotsEnabled,
   progress,
   disablePagesAmountManagement,
   overdragEnabled,
@@ -18,23 +17,22 @@ export function ControlsPanel({
   addPage,
   removePage,
   toggleScroll,
-  toggleDots,
   toggleAnimation,
   toggleOverdrag,
 }: NavigationPanelProps) {
   const firstPage = useCallback(() => setPage(0), [setPage]);
-  const prevPage = useCallback(() => setPage(activePage - 1), [
-    activePage,
-    setPage,
-  ]);
-  const nextPage = useCallback(() => setPage(activePage + 1), [
-    setPage,
-    activePage,
-  ]);
-  const lastPage = useCallback(() => setPage(pages.length - 1), [
-    pages.length,
-    setPage,
-  ]);
+  const prevPage = useCallback(
+    () => setPage(activePage - 1),
+    [activePage, setPage]
+  );
+  const nextPage = useCallback(
+    () => setPage(activePage + 1),
+    [setPage, activePage]
+  );
+  const lastPage = useCallback(
+    () => setPage(pages.length - 1),
+    [pages.length, setPage]
+  );
   return (
     <>
       <View style={styles.buttons}>
@@ -42,11 +40,6 @@ export function ControlsPanel({
           testID="scroll-enabled-button"
           text={scrollEnabled ? 'Scroll Enabled' : 'Scroll Disabled'}
           onPress={toggleScroll}
-        />
-        <Button
-          style={styles.buttonAdjustment}
-          text={dotsEnabled ? 'Hide dots' : 'Show dots'}
-          onPress={toggleDots}
         />
         <Button
           style={styles.buttonAdjustment}

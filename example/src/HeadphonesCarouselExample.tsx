@@ -16,7 +16,7 @@ import {
   Animated,
   ImageRequireSource,
 } from 'react-native';
-import type { PagerViewOnPageScrollEventData } from 'src/types';
+import type { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
 import PagerView from 'react-native-pager-view';
 
 const data = [

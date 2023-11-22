@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   Button,
   Alert,
+  I18nManager,
+  DevSettings,
 } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -30,6 +32,8 @@ import CustomTabBarExample from './tabView/CustomTabBarExample';
 import CoverflowExample from './tabView/CoverflowExample';
 import ReanimatedOnPageScrollExample from './ReanimatedOnPageScrollExample';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const examples = [
   { component: BasicPagerViewExample, name: 'Basic Example' },
@@ -69,6 +73,7 @@ function App() {
       {examples.map((example) => (
         <TouchableOpacity
           key={example.name}
+          testID={example.name}
           style={styles.exampleTouchable}
           onPress={() => {
             //@ts-ignore
@@ -87,49 +92,63 @@ const Stack = createStackNavigator();
 const NativeStack = createNativeStackNavigator();
 
 export function Navigation() {
-  const [mode, setMode] = React.useState<'native' | 'js'>('native');
+  const [mode, setMode] = React.useState<'native' | 'js'>('js');
   const NavigationStack = mode === 'js' ? Stack : NativeStack;
   return (
-    <NavigationContainer>
-      <NavigationStack.Navigator initialRouteName="PagerView Example">
-        <NavigationStack.Screen
-          name="PagerView Example"
-          component={App}
-          options={{
-            headerRight: () => (
-              <Button
-                onPress={() =>
-                  Alert.alert(
-                    'Alert',
-                    `Do you want to change to the ${
-                      mode === 'js' ? 'native stack' : 'js stack'
-                    } ?`,
-                    [
-                      { text: 'No', onPress: () => {} },
-                      {
-                        text: 'Yes',
-                        onPress: () => {
-                          setMode(mode === 'js' ? 'native' : 'js');
-                        },
-                      },
-                    ]
-                  )
-                }
-                title={mode === 'js' ? 'JS' : 'NATIVE'}
-                color="orange"
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <NavigationStack.Navigator initialRouteName="PagerView Example">
+            <NavigationStack.Screen
+              name="PagerView Example"
+              component={App}
+              options={{
+                headerRight: () => (
+                  <Button
+                    onPress={() =>
+                      Alert.alert(
+                        'Alert',
+                        `Do you want to change to the ${
+                          mode === 'js' ? 'native stack' : 'js stack'
+                        } ?`,
+                        [
+                          { text: 'No', onPress: () => {} },
+                          {
+                            text: 'Yes',
+                            onPress: () => {
+                              setMode(mode === 'js' ? 'native' : 'js');
+                            },
+                          },
+                        ]
+                      )
+                    }
+                    title={mode === 'js' ? 'JS' : 'NATIVE'}
+                    color="orange"
+                  />
+                ),
+                headerLeft: () => (
+                  <Button
+                    title={I18nManager.getConstants().isRTL ? 'RTL' : 'LTR'}
+                    color="orange"
+                    onPress={() => {
+                      I18nManager.forceRTL(!I18nManager.getConstants().isRTL);
+                      DevSettings.reload();
+                    }}
+                  />
+                ),
+              }}
+            />
+            {examples.map((example, index) => (
+              <NavigationStack.Screen
+                key={index}
+                name={example.name}
+                component={example.component}
               />
-            ),
-          }}
-        />
-        {examples.map((example, index) => (
-          <NavigationStack.Screen
-            key={index}
-            name={example.name}
-            component={example.component}
-          />
-        ))}
-      </NavigationStack.Navigator>
-    </NavigationContainer>
+            ))}
+          </NavigationStack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

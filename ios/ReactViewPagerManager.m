@@ -63,7 +63,7 @@ RCT_EXPORT_METHOD(setPageWithoutAnimation
     [self goToPage:reactTag index:index animated:false];
 }
 
-RCT_EXPORT_METHOD(setScrollEnabled
+RCT_EXPORT_METHOD(setScrollEnabledImperatively
                   : (nonnull NSNumber *)reactTag enabled
                   : (nonnull NSNumber *)enabled) {
     BOOL isEnabled = [enabled boolValue];
@@ -78,9 +78,6 @@ RCT_CUSTOM_VIEW_PROPERTY(keyboardDismissMode, NSString, ReactNativePageView) {
     [view shouldDismissKeyboard:[RCTConvert NSString:json]];
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(showPageIndicator, BOOL, ReactNativePageView) {
-    [view shouldShowPageIndicator:[RCTConvert BOOL:json]];
-}
 
 - (UIView *)view {
     return [[ReactNativePageView alloc] initWithEventDispatcher:self.bridge.eventDispatcher];

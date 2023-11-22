@@ -32,7 +32,6 @@ export function useNavigationPanel(
   const [overdragEnabled, setOverdragEnabled] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [scrollState, setScrollState] = useState('idle');
-  const [dotsEnabled, setDotsEnabled] = useState(false);
   const [logs, setLogs] = useState<EventLog[]>([]);
   const [progress, setProgress] = useState({ position: 0, offset: 0 });
   const onPageScrollOffset = useRef(new Animated.Value(0)).current;
@@ -55,20 +54,20 @@ export function useNavigationPanel(
     () => setPages((prevPages) => [...prevPages, createPage(prevPages.length)]),
     []
   );
-  const removePage = useCallback(
-    () => setPages((prevPages) => prevPages.slice(0, prevPages.length - 1)),
-    []
-  );
+  const removePage = useCallback(() => {
+    setPages((prevPages) => {
+      if (prevPages.length === 1) {
+        return prevPages;
+      }
+      return prevPages.slice(0, prevPages.length - 1);
+    });
+  }, []);
   const toggleAnimation = useCallback(
     () => setIsAnimated((animated) => !animated),
     []
   );
   const toggleScroll = useCallback(
     () => setScrollEnabled((enabled) => !enabled),
-    []
-  );
-  const toggleDots = useCallback(
-    () => setDotsEnabled((enabled) => !enabled),
     []
   );
   const toggleOverdrag = useCallback(
@@ -147,14 +146,12 @@ export function useNavigationPanel(
     pages,
     scrollState,
     scrollEnabled,
-    dotsEnabled,
     progress,
     overdragEnabled,
     setPage,
     addPage,
     removePage,
     toggleScroll,
-    toggleDots,
     toggleAnimation,
     setProgress,
     onPageScroll,
